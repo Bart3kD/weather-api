@@ -1,6 +1,6 @@
 class AirQualityRepository:
     def __init__(self) -> None:
-        self._airQualities: list[dict[str, str | int| float]]
+        self._airQualities: list[dict[str, str | int| float]] = []
     
 
     def add_airQuality(self, 
@@ -34,4 +34,4 @@ class AirQualityRepository:
     def get_airQualities(self) -> list[dict[str, str | int| float]]:
         return self._airQualities
 
-airQualityRepository = AirQualityRepository
+airQualityRepository = AirQualityRepository()

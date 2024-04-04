@@ -1,9 +1,9 @@
 import datetime
 import copy
 
-from src.repositories import AirQualityRepository, airQualityRepository
+from repositories import AirQualityRepository, airQualityRepository
 
-from src.airQuality import AirQuality, airQuality
+from airQuality import AirQuality, airQuality
 
 
 class CreateAirQualityController:
@@ -34,9 +34,8 @@ class CreateAirQualityController:
     
 
 class GetAirQualitiesController:
-    def __init__(self, repository: AirQualityRepository, dto: AirQuality) -> None:
+    def __init__(self, repository: AirQualityRepository) -> None:
         self._repository = repository
-        self.dto = dto
     
     def get(self, timestamp: str | None = None):
         airQualities = copy.deepcopy(self._repository.get_airQualities())

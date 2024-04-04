@@ -3,7 +3,7 @@ from api_key import key
 import requests
 import json
 
-from src.controllers import create_airQuality_controller, get_airQualities_controller
+from controllers import create_airQuality_controller, get_airQualities_controller
 
 app = Flask(__name__)
 
