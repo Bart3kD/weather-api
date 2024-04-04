@@ -9,10 +9,10 @@ from airQuality import AirQuality, airQuality
 class CreateAirQualityController:
     def __init__(self, repository: AirQualityRepository, dto: AirQuality) -> None:
         self._repository = repository
-        self.dto = dto
+        self._dto = dto
 
     
-    def create(self, airQuality: dict[str, str | int | float]) -> None:
+    def create(self, airQuality: list[dict[str, str | int | float]]) -> None:
         self._dto.add_data(airQuality)
         data = self._dto.get_data()
 
