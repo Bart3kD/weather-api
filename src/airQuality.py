@@ -1,62 +1,48 @@
-class AirQuality:
-    def __init__(self):
-        self._timestamp = None
-        self._aqi_US = None
-        self._aqi_China = None
-        self._main_pollutant_US = None
-        self._main_pollutant_China = None
-        self._temperature = None
-        self._athmospheric_pressure = None
-        self._humidity = None
-        self._wind_speed = None
-        self._wind_direction = None
+from pydantic import BaseModel
+from typing import Optional
 
 
-    def add_data(self, data: dict[str, None | dict[str, float | int | str]]):
-        for key in list(data.keys()):
-            if key not in ['pollution', 'weather']:
-                raise ValueError("Invalid airQuality data")
-        
-        for key in [key for key in ["pollution", "weather"] if key not in list(data.keys())]:
-            data[key] = None
-        
-        pollution = data['pollution']
-        weather = data['weather']
+class AirQuality(BaseModel):
+    timestamp: Optional[str]
+    aqi_US: Optional[int]
+    aqi_China: Optional[int]
+    main_pollutant_US: Optional[str]
+    main_pollutant_China: Optional[str]
+    temperature: Optional[int]
+    atmospheric_pressure: Optional[int]
+    humidity: Optional[int]
+    wind_speed: Optional[float]
+    wind_direction: Optional[int]
 
-        timestamp = pollution['ts']
-        aqi_US = pollution['aqius']
-        aqi_China = pollution['aqicn']
-        main_pollutant_US = pollution['mainus']
-        main_pollutant_China = pollution['maincn']
-        temerature = weather['tp']
-        athmospheric_pressure = weather['pr']
-        humidity = weather['hu']
-        wind_speed = weather['ws']
-        wind_direction = weather['wd']
+    def add_data(self, data: dict[str, Optional[dict[str, Optional[float]]]]):
+        for key in ['pollution', 'weather']:
+            if key not in data:
+                data[key] = None
 
-        self._timestamp = timestamp
-        self._aqi_US = aqi_US
-        self._aqi_China = aqi_China
-        self._main_pollutant_US = main_pollutant_US
-        self._main_pollutant_China = main_pollutant_China
-        self._temperature = temerature
-        self._athmospheric_pressure = athmospheric_pressure
-        self._humidity = humidity
-        self._wind_speed = wind_speed
-        self._wind_direction = wind_direction
-    
+        self.timestamp = data['pollution'].get('ts')
+        self.aqi_US = data['pollution'].get('aqius')
+        self.aqi_China = data['pollution'].get('aqicn')
+        self.main_pollutant_US = data['pollution'].get('mainus')
+        self.main_pollutant_China = data['pollution'].get('maincn')
+        self.temperature = data['weather'].get('tp')
+        self.atmospheric_pressure = data['weather'].get('pr')
+        self.humidity = data['weather'].get('hu')
+        self.wind_speed = data['weather'].get('ws')
+        self.wind_direction = data['weather'].get('wd')
+
     def get_data(self) -> tuple[str, int, int, str, str, int, int, int, float, int]:
-        data = (self._timestamp, self._aqi_US, self._aqi_China, self._main_pollutant_US, self._main_pollutant_China, self._temperature, self._athmospheric_pressure, self._humidity, self._wind_speed, self._wind_direction)
-        self._timestamp = None
-        self._aqi_US = None
-        self._aqi_China = None
-        self._main_pollutant_US = None
-        self._main_pollutant_China = None
-        self._temperature = None
-        self._athmospheric_pressure = None
-        self._humidity = None
-        self._wind_speed = None
-        self._wind_direction = None
+        data = (
+            self.timestamp, self.aqi_US, self.aqi_China, self.main_pollutant_US, self.main_pollutant_China,
+            self.temperature, self.atmospheric_pressure, self.humidity, self.wind_speed, self.wind_direction
+        )
+        self.timestamp = None
+        self.aqi_US = None
+        self.aqi_China = None
+        self.main_pollutant_US = None
+        self.main_pollutant_China = None
+        self.temperature = None
+        self.atmospheric_pressure = None
+        self.humidity = None
+        self.wind_speed = None
+        self.wind_direction = None
         return data
-
-airQuality = AirQuality()

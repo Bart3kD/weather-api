@@ -1,52 +1,43 @@
-import datetime
 import copy
+from typing import Union, List
+from repositories import AirQualityRepository
 
-from repositories import AirQualityRepository, airQualityRepository
-
-from airQuality import AirQuality, airQuality
+from airQuality import AirQuality
 
 
 class CreateAirQualityController:
-    def __init__(self, repository: AirQualityRepository, dto: AirQuality) -> None:
+    def __init__(self, repository: AirQualityRepository, dto: AirQuality):
         self._repository = repository
         self._dto = dto
 
-    
-    def create(self, airQuality: list[dict[str, str | int | float]]) -> None:
+    def create(self, airQuality) -> None:
         self._dto.add_data(airQuality)
         data = self._dto.get_data()
 
         if None in data:
-            raise ValueError("Missing one of the arguments")
+            raise ValueError("Missing arguments")
 
-        timestamp = data[0]
-        aqi_US = data[1]
-        aqi_China = data[2]
-        main_pollutant_US = data[3]
-        main_pollutant_China = data[4]
-        temperature = data[5]
-        athmospheric_pressure = data[6]
-        humidity = data[7]
-        wind_speed = data[8]
-        wind_direction = data[9]
+        self._repository.add_airQuality(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
+                                        data[9])
 
-        self._repository.add_airQuality(timestamp, aqi_US, aqi_China, main_pollutant_US, main_pollutant_China, temperature, athmospheric_pressure, humidity, wind_speed, wind_direction)
-    
 
 class GetAirQualitiesController:
     def __init__(self, repository: AirQualityRepository) -> None:
         self._repository = repository
-    
-    def get(self, timestamp: str | None = None):
-        airQualities = copy.deepcopy(self._repository.get_airQualities())
+
+    def get(self, timestamp: Union[str, None] = None) -> Union[List[dict], dict]:
+        airQualities = copy.deepcopy(self._repository.get_air_qualities())
         if timestamp is None:
             return airQualities
 
         for airQuality in airQualities:
             if airQuality['timestamp'] == timestamp:
                 return airQuality
-        
+            if airQuality['temperature'] >= 100 or airQuality['temperature'] <= -100:
+                raise ValueError('Invalid temperature')
+            if airQuality['athmospheric_pressure'] >= 2000 or airQuality['athmospheric_pressure'] <= 500:
+                raise ValueError('Invalid atmospheric pressure')
+
         raise ValueError('Invalid timestamp')
 
-create_airQuality_controller = CreateAirQualityController(airQualityRepository, airQuality)
-get_airQualities_controller = GetAirQualitiesController(airQualityRepository)
+
