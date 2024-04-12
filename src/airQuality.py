@@ -29,6 +29,11 @@ class AirQuality(BaseModel):
         self.humidity = data['weather'].get('hu')
         self.wind_speed = data['weather'].get('ws')
         self.wind_direction = data['weather'].get('wd')
+        
+        if self.temperature >= 100 or self.temperature <= -100:
+             raise ValueError('Invalid temperature')
+        if self.atmospheric_pressure >= 2000 or self.atmospheric_pressure <= 500:
+             raise ValueError('Invalid athmospheric pressure')
 
     def get_data(self) -> tuple[str, int, int, str, str, int, int, int, float, int]:
         data = (

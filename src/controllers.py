@@ -33,10 +33,6 @@ class GetAirQualitiesController:
         for airQuality in airQualities:
             if airQuality['timestamp'] == timestamp:
                 return airQuality
-            if airQuality['temperature'] >= 100 or airQuality['temperature'] <= -100:
-                raise ValueError('Invalid temperature')
-            if airQuality['athmospheric_pressure'] >= 2000 or airQuality['athmospheric_pressure'] <= 500:
-                raise ValueError('Invalid atmospheric pressure')
 
         raise ValueError('Invalid timestamp')
 
