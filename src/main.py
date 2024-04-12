@@ -8,11 +8,10 @@ app = Flask(__name__)
 
 
 class AirQualityAPI:
-    def __init__(self):
-        self.air_quality = None
-        self.air_quality = AirQualityRepository()
-        self.createController = CreateAirQualityController(self.air_quality, AirQuality())
-        self.getController = GetAirQualitiesController(self.air_quality)
+    def __init__(self, dto: AirQuality, repository: AirQualityRepository, createController: CreateAirQualityController, getController: GetAirQualitiesController):
+        self.air_quality = repository()
+        self.createController = createController(self.air_quality, dto())
+        self.getController = getController(self.air_quality)
 
 
     def ping(self):
@@ -30,7 +29,7 @@ class AirQualityAPI:
             return Response(response=str(error), status=400)
 
 
-air_quality_api = AirQualityAPI()
+air_quality_api = AirQualityAPI(AirQuality, AirQualityRepository, CreateAirQualityController, GetAirQualitiesController)
 
 
 @app.route('/')
